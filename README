@@ -1,2 +1,38 @@
 Library for the locomotion of modular snake robots
+------------------------------------------------------
+
+This library has been tested using the skymega board, which is arduino compatible
+
+-> In thingiverse (English)
+  http://www.thingiverse.com/thing:14197
+
+-> Iearobotics (Spanish)
+  http://www.iearobotics.com/wiki/index.php?title=SkyMega
+
+INSTALLATION
+------------
+
+The current version is being developed under Arduino 22 IDE
+
+* Copy the folder ArduSnake under the sketchbook/libraries arduino folder
+  (it is located in your home directory)
+
+* If you are using the skymega board instead of an Arduino, copy the
+  folder skymega folder under home/sketchbook/libraries
+
+HELLO WORLD EXAMPLE
+-------------------
+
+This example just makes oscillate a servo connected to the pin 8 (SERVO 2
+in the skymega board)
+
+* Connect the servo to the board (Skymega/Arduino)
+* Open de Arduino IDE
+* Go to File/examples/ArduSnake/Oscillator_test1
+* Download the example
+* The servo will star to oscillate!
+
+
+
+
 
