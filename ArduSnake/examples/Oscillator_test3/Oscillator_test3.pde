@@ -5,7 +5,7 @@
 //------------------------------------------------------------
 //-- Example of use of the Oscillator layer
 //--
-//-- Example 3: Two servos oscillating independly, with different
+//-- Example 3: Two servos oscillating independenly, with different
 //--  parameters
 //--------------------------------------------------------------
 //-- (c) Juan Gonzalez-Gomez (Obijuan), Feb-2012
