@@ -10,6 +10,11 @@
 
 #include <Servo.h>
 
+//-- Macro for converting from degrees to radians
+#ifndef DEG2RAD
+  #define DEG2RAD(g) ((g)*M_PI)/180
+#endif
+
 class Oscillator
 {
   public:
