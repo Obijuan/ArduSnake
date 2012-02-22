@@ -51,8 +51,7 @@ void setup()
 
 }
 
-//-- The servo will oscillate with the
-//-- default parameters
+
 void loop()
 {
   //-- Refresh the oscillator
