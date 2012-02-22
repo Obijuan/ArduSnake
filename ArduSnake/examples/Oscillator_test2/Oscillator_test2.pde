@@ -30,11 +30,23 @@ void setup()
 
   //-- For standar arduino boards you can use the pin number
   //osc.attach(8);
-
-  //-- Set the parameters
+  
+  //-------- Set the oscillator parameters
+  //-- Set the offset. The servo will oscillate around this point
+  //-- Units: Degrees. Default value: 0
   osc.SetO(40);
+  
+  //-- Set the Amplitude. How far the servo moves from the position
+  //-- given by the offset. Units: degrees. Default value: 45
   osc.SetA(40);
-  osc.SetT(2000);
+
+  //-- Set the oscillation period. After one period the servo will be
+  //-- in the same state. Units: ms. Default value: 2000
+  osc.SetT(1000);
+
+  //-- Set the Initial phase. It determines in which part of the cycle
+  //-- the servo starts. Setting it to 90 degrees the servo will start
+  //-- the oscillation from the vertical positon
   osc.SetPh(DEG2RAD(-90));
 
 }
