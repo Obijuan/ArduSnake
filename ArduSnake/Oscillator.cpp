@@ -87,10 +87,11 @@ void Oscillator::refresh()
         _pos = round(_A * sin(_phase + _phase0) + _O);
 	if (_rev) _pos=-_pos;
         _servo.write(_pos+90);
+
+        //-- Increment the phase
+        _phase = _phase + _inc;
       }  
    
-      //-- Increment the phase
-      _phase = _phase + _inc;
 
   }
 }

@@ -27,6 +27,7 @@ class Oscillator
     void SetT(unsigned int T); 
     void Stop() {_stop=true;};
     void Play() {_stop=false;};
+    void Reset() {_phase=0;};
     void refresh();
     
   private:
