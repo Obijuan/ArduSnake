@@ -20,9 +20,10 @@
 //-- Serial commands
 const unsigned char CMD_STOP = 'S';  //-- Stop the oscillaltor
 const unsigned char CMD_PLAY = 'P';  //-- Play the oscillator
+const unsigned char CMD_SET_A= 'A';  //-- Set Amplitude
 
 //-- Declare the oscillators
-Oscillator osc[4];
+Oscillator osc[8];
 
 void setup()
 {
@@ -31,11 +32,15 @@ void setup()
   //-- Configure the serial comunication with PC
   Serial.begin(9600);
 
-  //-- Attach the oscillator to servo
-  osc[0].attach(SERVO2);
+  //-- Attach the oscillators to the servos
+  osc[1].attach(SERVO2);
+  osc[3].attach(SERVO4);
+  osc[5].attach(SERVO6);
+  osc[7].attach(SERVO8);
 
-  //-- Initially the oscillator is stoped
-  osc[0].Stop();
+  //-- Initially the oscillators are stopped
+  for (int i=0; i<8; i++)
+    osc[i].Stop();
 
   //-- The oscillator is configured with the default parameters
   freeleds_display(0xAA);
@@ -45,10 +50,12 @@ void setup()
 unsigned char inbyte;
 char nosc;  //-- Oscillator number
 char cmd;   //-- Command
+char A;     //-- Amplitude
 void loop()
 {
   //-- refresh the oscillators
-  osc[0].refresh();
+  for (int i=0; i<8; i++) 
+    osc[i].refresh();
 
   //-- When a byte is received from the PC
   if (Serial.available()) {
@@ -57,24 +64,34 @@ void loop()
     //-- The first byte is the oscillator number (in ASCII), characters '0'-'7'
     
     //-- Read the oscillator number
-    nosc = Serial.read() - '0';
+    nosc = Serial.read() - '1';
     freeleds_display(nosc);
     
     //-- Read the command
+    while(!Serial.available());
     cmd = Serial.read();
     freeleds_display(cmd);
-    //osc[nosc].Play();
     
-  /*  
+    //-- Depending on the command... execute the action!
     switch(cmd){
       case CMD_STOP:     //-- Stop command
         osc[nosc].Stop();
+        Serial.println("Stop");
         break;
+
       case CMD_PLAY:     //-- Play command
         osc[nosc].Play();
+        Serial.println("Play");
         break;
+
+      case CMD_SET_A:
+        Serial.println("SetA");
+        //-- Read the amplitude
+        while(!Serial.available());
+        A = Serial.read();
+	osc[nosc].SetA(A);
     }
-  */  
+    
     
   }
 }
