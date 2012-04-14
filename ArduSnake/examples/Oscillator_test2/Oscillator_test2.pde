@@ -13,9 +13,6 @@
 //--------------------------------------------------------------
 #include <Servo.h>
 #include <Oscillator.h>
-
-//-- This file contains the pin names for the skymega board
-//-- If using arduino you can comment it out
 #include "skymega.h"
 
 //-- Declare an oscillator
@@ -24,12 +21,8 @@ Oscillator osc;
 void setup()
 {
   //-- Attach the oscillator to the servo
-  //-- If skymega.h is included, you can indicate the
-  //-- servo number as read on the board silkscreen
+  //-- For arduino, you can use the pin number instead of SERVO2 (for example 8)
   osc.attach(SERVO2);
-
-  //-- For standar arduino boards you can use the pin number
-  //osc.attach(8);
   
   //-------- Set the oscillator parameters
   //-- Set the offset. The servo will oscillate around this point
@@ -45,12 +38,9 @@ void setup()
   osc.SetT(1000);
 
   //-- Set the Initial phase. It determines in which part of the cycle
-  //-- the servo starts. Setting it to 90 degrees the servo will start
-  //-- the oscillation from the vertical positon
+  //-- the servo starts. So, this parameter determines the staring point
   osc.SetPh(DEG2RAD(-90));
-
 }
-
 
 void loop()
 {
