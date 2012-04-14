@@ -5,11 +5,10 @@
 //------------------------------------------------------------
 //-- Example of use of the Oscillator layer
 //--
-//-- Example 4: Two servos oscillating with the same parameters,
-//--   excepts the phase. There is a phase difference between the
-//--   two oscillators, so that a mini-wave appears
+//-- Example 5: A mini-wave is used for the locomotion of
+//-- a two modules worm robot
 //--------------------------------------------------------------
-//-- (c) Juan Gonzalez-Gomez (Obijuan), Feb-2012
+//-- (c) Juan Gonzalez-Gomez (Obijuan), April-2012
 //-- GPL license
 //--------------------------------------------------------------
 #include <Servo.h>
@@ -22,9 +21,9 @@ Oscillator osc[2];
 //-- Global parameters for the oscillators
 //-- Change this parameters for generating different mini-waves
 const int A=40;
-const int O=40;
-const int T=2000;
-const double phase_diff = DEG2RAD(-45); 
+const int O=0;
+const int T=1600;
+const double phase_diff = DEG2RAD(130); 
 
 void setup()
 {
