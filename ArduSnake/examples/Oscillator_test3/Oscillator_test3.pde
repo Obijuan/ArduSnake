@@ -45,7 +45,7 @@ void loop()
 {
   //-- Refresh the oscillators
   for (int i=0; i<2; i++)
-    osc[i].refresh();
+    osc[i].refresh(); 
 }
 
 
