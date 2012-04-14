@@ -24,7 +24,7 @@ Oscillator osc[2];
 const int A=40;
 const int O=40;
 const int T=2000;
-const double phase_diff = DEG2RAD(-45);
+const double phase_diff = DEG2RAD(-45); 
 
 void setup()
 {
