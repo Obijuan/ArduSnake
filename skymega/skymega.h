@@ -9,7 +9,12 @@
 #ifndef skymega_h
 #define skymega_h
 
-#include "WProgram.h"
+#if defined(ARDUINO) && ARDUINO >= 100
+  #include "Arduino.h"
+#else
+  #include "WProgram.h"
+  #include <pins_arduino.h>
+#endif
 
 //-- Mapping between the servo name (in the skymega board) and the
 //-- arduino pins
