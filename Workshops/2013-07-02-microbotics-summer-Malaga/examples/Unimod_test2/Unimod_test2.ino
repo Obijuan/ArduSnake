@@ -1,18 +1,22 @@
 //--------------------------------------------------------------
-//-- Different oscillations for unimod
-//-- When the test button is pressed, the oscillation is changed
-//-- The phase different between the two modules is changed
+//-- Oscillation of 2 modules. When the test button is pressed,
+//--  the phase difference between the two modules is changed
 //--------------------------------------------------------------
 //-- (c) Juan Gonzalez-Gomez (Obijuan), Jul-2013
 //-- GPL license
 //--------------------------------------------------------------
 #include <Servo.h>
 #include <Oscillator.h>
+
+//-- Only needed if using the skymega board
 #include "skymega.h"
 
+//-- Fixed parameters: period, amplitude and offset
 const int T = 2000;
 const int A = 40;
 const int O = 0;
+
+//-- Phase difference is changed. More values can be added
 const double Ph[] = {0.0, 180.0, 90.0};
 
 //-- Number of elements in the sequence
@@ -25,15 +29,16 @@ Oscillator osc[2];
 void setup()
 {
   //-- Attach the oscillator to the servo
-  //-- For arduino, you can use the pin number instead of SERVO2 (for example 8)
+  //-- For arduino, you can use the pin numbers instead of SERVO2 and SERVO4
   osc[0].attach(SERVO2);
   osc[1].attach(SERVO4);
   
-  // The led is an output
+  // Test LED. For arduino uno use the pin 13
   pinMode(LED, OUTPUT);      
   
-  //-- The button is an input
+  //-- Test button. For arduino uno use a pin number
   pinMode(BUTTON, INPUT);
+  
   //-- Activate the button pull-up resistor
   digitalWrite(BUTTON, HIGH); 
 
@@ -50,6 +55,9 @@ void setup()
   osc[1].SetA(A);
   osc[1].SetT(T);
   osc[1].SetPh(DEG2RAD(Ph[seq]));
+  
+  //-- Turn on the led
+  digitalWrite(LED, ON);
   
 }
 
@@ -100,8 +108,6 @@ bool timeout(long time)
 //-- Led state
 int ledState = OFF;
 
-//-- Led blinking period, in ms
-long period = 1000;
 
 //-- The servo will oscillate with the
 //-- default parameters
@@ -112,11 +118,9 @@ void loop()
     osc[i].refresh();
   
   if (button_clicked()) {
-    Serial.println("clicked!");
     
     //-- Point to the next sequence
     seq = (seq + 1) % seq_size;
-    Serial.println(seq, DEC);
     
     //-- Update the oscillator with the new sequence
     osc[1].SetPh(DEG2RAD(Ph[seq]));
