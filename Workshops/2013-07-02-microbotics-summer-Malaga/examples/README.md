@@ -13,6 +13,7 @@ Examples
 
 - **4** pp_test: Locomotion of the pitch-pitch minimal configuration. Press the test button for chaging the locomotion gait
 
+- **5** pyp_gaits: Locomotion of the pitch-yaw-pitch configuration. Press the test button for changing the locomotion gait:  forward, sideways, rotating and rolling
 
 
 
