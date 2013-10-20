@@ -5,7 +5,7 @@ Examples
 --
 
 
-- **1** - Unimod_test1.  Oscillation of 1 module. The parameters (amplitude, period and offset) are modify when the test button is pressed.
+- **1 - Unimod_test1**.  Oscillation of 1 module. The parameters (amplitude, period and offset) are modify when the test button is pressed.
 
 - **2** Unimod_test2: Oscillation of 2 modules. The phase difference is changed when the test button is pressed
 
@@ -15,5 +15,5 @@ Examples
 
 - **5** pyp_gaits: Locomotion of the pitch-yaw-pitch configuration. Press the test button for changing the locomotion gait:  forward, sideways, rotating and rolling
 
-
+- **6 - py6**: locomotion of a 6 module pitch-yaw snake robot
 
