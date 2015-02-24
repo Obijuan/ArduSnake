@@ -43,9 +43,11 @@ const char CMD_END = '\r';  //-- Character end of frame
                             //-- If the arduino terminal is used, Select the option "carriage return"
 
 //-- Command id's                            
-const unsigned char CMD_STOP = 'S';  //-- Stop the oscillaltor
-const unsigned char CMD_PLAY = 'P';  //-- Play the oscillator
-const unsigned char CMD_SET_A= 'A';  //-- Set Amplitude
+const unsigned char CMD_STOP = 'S';   //-- Stop the oscillaltor
+const unsigned char CMD_PLAY = 'P';   //-- Play the oscillator
+const unsigned char CMD_SET_A = 'A';  //-- Set Amplitude
+const unsigned char CMD_SET_O = 'O';  //-- Set Offset
+const unsigned char CMD_SET_P = 'H';  //-- Set phase
 const unsigned char CMD_NONE = 0;
                             
 
@@ -69,7 +71,7 @@ void setup()
   //-- Initially the oscillators are stopped
   for (int i=0; i<NSERVOS; i++) {
     osc[i].Stop();
-    osc[i].SetA(10); //-- debugging!
+    //osc[i].SetA(10); //-- debugging!
   }  
     
   //Setup usb serial connection to computer
@@ -106,82 +108,104 @@ bool cmd_ok = false;
 void getCommands()
 {
   //-- Read the incoming commands
-  if (Serial.available()) {
-    while (Serial.available()) {
+  while (Serial.available()) {
       
-      //-- Read the received char
-      char inChar = (char)Serial.read();
+    //-- Read the received char
+    char inChar = (char)Serial.read();
       
-      //-- Depending on the state
-      switch(state) {
+    //-- Depending on the state
+    switch(state) {
         
-        //-- Read the servo ID
-        case WAITING_SERVO_ID:
+      //-- Read the servo ID
+      case WAITING_SERVO_ID:
         
-          //-- Calculate the index
-          si = inChar - 'a';
+        inputString = "";
+        
+        //-- Calculate the index
+        si = inChar - 'a';
           
-          //-- Only if the servo index is ok, the command is accepted
-          if (si >= 0 && si < NSERVOS) {
-            state = WAITING_CMD_ID;
-          }
-          //-- otherwise it is ignored. The state is not changed
-          else {
-            state = WAITING_SERVO_ID;
-            Serial.println("Wrong Servo id");
-          }
-          break;
-          
-        //-- Read the cmd ID
-        case WAITING_CMD_ID:
-           cmd = inChar;
-           
-           //-- The next state depends on the command id
-           switch(cmd) {
-             
-             case CMD_STOP:
-             case CMD_PLAY:
-               state = WAITING_END;
-               break;
-               
-             //-- if the command is unknow, move to the initial state  
-             default:
-               state = WAITING_SERVO_ID;
-               Serial.println("Wrong command");
-           }
-           break;  
-         
-         //-- Read the end of the frame
-         case WAITING_END:
-         
-           //-- The next state is the initial, in any case
-           state = WAITING_SERVO_ID;
-         
-           //-- End of frame received correctly
-           if (inChar == CMD_END) {
-             cmd_ok = true;             //-- The command is ok!
-           }  
-           else {
-             cmd_ok = false;   //-- Invalid frame. It will be ignored
-           }
-           break;
-          
-      }
-      
-      
-      inputString += inChar;
-      
-      //Serial.print(inChar,HEX);  //-- For debugging
-      //Serial.println(" ");
-      
-      if (inChar == CMD_END) {
-        //stringComplete = true;
-        //-- Serial.println(inputString);  //-- For debugging
+        //-- Only if the servo index is ok, the command is accepted
+        if (si >= 0 && si < NSERVOS) {
+          state = WAITING_CMD_ID;
+        }
+        //-- otherwise it is ignored. The state is not changed
+        else {
+          state = WAITING_SERVO_ID;
+          Serial.println("Wrong Servo id");
+        }
         break;
-      }
+          
+      //-- Read the cmd ID
+      case WAITING_CMD_ID:
+         cmd = inChar;
+           
+         //-- The next state depends on the command id
+         switch(cmd) {
+             
+           case CMD_STOP:
+           case CMD_PLAY:
+             state = WAITING_END;
+             break;
+               
+           case CMD_SET_O:
+           case CMD_SET_A:
+           case CMD_SET_P:
+             state = WAITING_VALUE;
+             break;
+               
+           //-- if the command is unknow, move to the initial state  
+           default:
+             state = WAITING_SERVO_ID;
+             Serial.println("Wrong command");
+         }
+         break;  
+         
+       //-- Read the value field
+       case WAITING_VALUE:
+           
+         //-- Check if inChar is a valid digit
+         if (isdigit(inChar) || inChar=='-' || inChar == CMD_END) {
+             
+           //-- Add the char to the String for latter processing
+           inputString += inChar;
+             
+           //-- when end of frame reached...
+           if (inChar == CMD_END) {
+             value = inputString.toInt();
+             state = WAITING_SERVO_ID;
+             cmd_ok = true;
+             //Serial.print(inputString);  //-- For debugging
+           }
+             
+         }
+         //-- Invalid digit
+         else {
+           //-- Move to the initial state. Invalid command
+           state = WAITING_SERVO_ID;
+           cmd_ok = false;
+           Serial.println("Wrong value");
+         }
+         break;
+         
+       //-- Read the end of the frame
+       case WAITING_END:
+         
+         //-- The next state is the initial, in any case
+         state = WAITING_SERVO_ID;
+         
+         //-- End of frame received correctly
+         if (inChar == CMD_END) {
+           cmd_ok = true;             //-- The command is ok!
+         }  
+         else {
+           cmd_ok = false;   //-- Invalid frame. It will be ignored
+         }
+         break;
+          
+    } //-- End switch
       
-    }
-  }
+  } //-- End While
+  
   
   //-- If the frame received is ok... process!
   if (cmd_ok) {
@@ -198,9 +222,23 @@ void getCommands()
       case CMD_STOP:
         osc[si].Stop();
         break;
+      
+      //-- Set the amplitude
+      case CMD_SET_A:
+        osc[si].SetA(abs(value));
+        break;
+        
+      //-- Set the offset
+      case CMD_SET_O:
+        osc[si].SetO(value);
+        break;
+        
+      //-- Set the phase
+      case CMD_SET_P:
+        osc[si].SetPh(DEG2RAD(value));
+        break;
+      
     }
-    
-    
     
     cmd_ok = false;
   }
@@ -212,54 +250,4 @@ void getCommands()
   
 }
 
-
-/*
-//-- Incoming byte from the PC
-unsigned char inbyte;
-char nosc;  //-- Oscillator number
-char cmd;   //-- Command
-char A;     //-- Amplitude
-void loop()
-{
-  //-- refresh the oscillators
-  for (int i=0; i<8; i++) 
-    osc[i].refresh();
-
-  //-- When a byte is received from the PC
-  if (Serial.available()) {
-
-    //-- Process the frame
-    //-- The first byte is the oscillator number (in ASCII), characters '0'-'7'
-    
-    //-- Read the oscillator number
-    nosc = Serial.read() - '1';
-    
-    //-- Read the command
-    while(!Serial.available());
-    cmd = Serial.read();
-    
-    //-- Depending on the command... execute the action!
-    switch(cmd){
-      case CMD_STOP:     //-- Stop command
-        osc[nosc].Stop();
-        Serial.println("Stop");
-        break;
-
-      case CMD_PLAY:     //-- Play command
-        osc[nosc].Play();
-        Serial.println("Play");
-        break;
-
-      case CMD_SET_A:
-        Serial.println("SetA");
-        //-- Read the amplitude
-        while(!Serial.available());
-        A = Serial.read();
-	osc[nosc].SetA(A);
-    }
-    
-    
-  }
-}
-*/
 
