@@ -48,6 +48,7 @@ const unsigned char CMD_PLAY = 'P';   //-- Play the oscillator
 const unsigned char CMD_SET_A = 'A';  //-- Set Amplitude
 const unsigned char CMD_SET_O = 'O';  //-- Set Offset
 const unsigned char CMD_SET_P = 'H';  //-- Set phase
+const unsigned char CMD_SET_T = 'T';  //-- Set Period
 const unsigned char CMD_NONE = 0;
                             
 
@@ -150,6 +151,7 @@ void getCommands()
            case CMD_SET_O:
            case CMD_SET_A:
            case CMD_SET_P:
+           case CMD_SET_T:
              state = WAITING_VALUE;
              break;
                
@@ -237,7 +239,11 @@ void getCommands()
       case CMD_SET_P:
         osc[si].SetPh(DEG2RAD(value));
         break;
-      
+        
+      //-- Set the period
+      case CMD_SET_T:
+        osc[si].SetT(abs(value));
+        break;
     }
     
     cmd_ok = false;
