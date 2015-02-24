@@ -77,7 +77,7 @@ void Oscillator::SetT(unsigned int T)
 /*******************************************************************/
 /* This function should be periodically called                     */
 /* in order to maintain the oscillations. It calculates            */
-/* if another sample should be taken and position the servo is so  */
+/* if another sample should be taken and position the servo if so  */
 /*******************************************************************/
 void Oscillator::refresh()
 {
@@ -91,11 +91,12 @@ void Oscillator::refresh()
         _pos = round(_A * sin(_phase + _phase0) + _O);
 	if (_rev) _pos=-_pos;
         _servo.write(_pos+90);
+      }
 
-        //-- Increment the phase
-        _phase = _phase + _inc;
-      }  
-   
+      //-- Increment the phase
+      //-- It is always increased, even when the oscillator is stop
+      //-- so that the coordination is always kept
+      _phase = _phase + _inc;
 
   }
 }
