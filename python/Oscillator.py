@@ -15,6 +15,8 @@ CMD_PLAY = 'P'
 CMD_STOP = 'S'
 CMD_SET_A = 'A'
 CMD_SET_O = 'O'
+CMD_SET_T = 'T'
+CMD_SET_Ph = 'H'
 CMD_END = '\r'
 
 class IncorrectAngle():
@@ -122,3 +124,64 @@ class Oscillator(object):
   def O(self, value):
     """Attribute: Set the offset"""
     self.set_O(value)
+    
+  def set_T(self, T):
+    """Set the oscillator period"""
+    
+    #-- Check that the T is positive 
+    if (T <= 0): 
+      raise IncorrectAngle()
+      return
+    
+    #-- Build the frame
+    frame = self.dir + CMD_SET_T + str(T) + CMD_END
+    
+    #-- Debug
+    print(frame)
+    
+    #-- Send the frame
+    self.sp.write(frame)
+    
+    #-- Store the current period
+    self._T = T
+    
+  @property
+  def T(self):
+    """Attribute: Return the current period"""
+    return self._T
+  
+  @T.setter
+  def T(self, value):
+    """Attribute: Set the period"""
+    self.set_T(value)
+
+  def set_Ph(self, Ph):
+    """Set the oscillator phase"""
+    
+    #-- Check that the phase is in the range [-360, 360] 
+    if (abs(Ph) > 360): 
+      raise IncorrectAngle()
+      return
+    
+    #-- Build the frame
+    frame = self.dir + CMD_SET_Ph + str(Ph) + CMD_END
+    
+    #-- Debug
+    print(frame)
+    
+    #-- Send the frame
+    self.sp.write(frame)
+    
+    #-- Store the current period
+    self._Ph = Ph
+    
+  @property
+  def Ph(self):
+    """Attribute: Return the current period"""
+    return self._Ph
+  
+  @Ph.setter
+  def Ph(self, value):
+    """Attribute: Set the period"""
+    self.set_Ph(value)
+    
