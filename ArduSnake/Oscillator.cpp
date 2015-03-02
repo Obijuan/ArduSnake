@@ -74,6 +74,16 @@ void Oscillator::SetT(unsigned int T)
   _inc = 2*M_PI/_N;
 };
 
+/*******************************/
+/* Manual set of the position  */
+/******************************/
+
+void Oscillator::SetPosition(int position)
+{
+  _servo.write(position+_trim);
+};
+
+
 /*******************************************************************/
 /* This function should be periodically called                     */
 /* in order to maintain the oscillations. It calculates            */
@@ -90,7 +100,7 @@ void Oscillator::refresh()
         //-- Sample the sine function and set the servo pos
         _pos = round(_A * sin(_phase + _phase0) + _O);
 	if (_rev) _pos=-_pos;
-        _servo.write(_pos+90);
+        _servo.write(_pos+90+_trim);
       }
 
       //-- Increment the phase
