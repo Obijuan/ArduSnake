@@ -176,6 +176,7 @@ void getCommands()
              value = inputString.toInt();
              state = WAITING_SERVO_ID;
              cmd_ok = true;
+             runCommand();
              //Serial.print(inputString);  //-- For debugging
            }
              
@@ -198,6 +199,7 @@ void getCommands()
          //-- End of frame received correctly
          if (inChar == CMD_END) {
            cmd_ok = true;             //-- The command is ok!
+           runCommand();
          }  
          else {
            cmd_ok = false;   //-- Invalid frame. It will be ignored
@@ -208,6 +210,14 @@ void getCommands()
       
   } //-- End While
   
+   // Refresh the oscillators!
+  for (int i = 0; i < NSERVOS; i++)
+  {
+    osc[i].refresh();
+  }
+}
+
+void runCommand(){ 
   
   //-- If the frame received is ok... process!
   if (cmd_ok) {
@@ -248,12 +258,6 @@ void getCommands()
     
     cmd_ok = false;
   }
-  
-  //-- Refresh the oscillators!
-  for (int i=0; i<NSERVOS; i++) {
-    osc[i].refresh();
-  }  
-  
 }
 
 
