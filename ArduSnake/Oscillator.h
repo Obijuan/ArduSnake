@@ -26,6 +26,7 @@ class Oscillator
     void SetPh(double Ph) {_phase0=Ph;};
     void SetT(unsigned int T);
     void SetTrim(int trim){_trim=trim;};
+    int getTrim() {return _trim;};
     void SetPosition(int position); 
     void Stop() {_stop=true;};
     void Play() {_stop=false;};
