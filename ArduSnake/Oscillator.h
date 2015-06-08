@@ -24,7 +24,7 @@ class Oscillator
     void SetA(unsigned int A) {_A=A;};
     void SetO(unsigned int O) {_O=O;};
     void SetPh(double Ph) {_phase0=Ph;};
-    void SetT(unsigned int T);
+    void SetT(unsigned int T) {_T=T};
     void SetTrim(int trim){_trim=trim;};
     int getTrim() {return _trim;};
     void SetPosition(int position); 
