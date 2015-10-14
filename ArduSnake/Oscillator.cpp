@@ -36,29 +36,43 @@ bool Oscillator::next_sample()
 //-- Attach an oscillator to a servo
 //-- Input: pin is the arduino pin were the servo
 //-- is connected
-void Oscillator::attach(int pin, bool rev)
+void Oscillator::attach(int pin, bool rev
 {
-  //-- Attach the servo and move it to the home position
-  _servo.attach(pin);
-  _servo.write(90);
-  
-  //-- Initialization of oscilaltor parameters
-  _TS=30;
-  _T=2000;
-  _N = _T/_TS;
-  _inc = 2*M_PI/_N;
-  
-  _previousMillis=0;
-  
-  //-- Default parameters
-  _A=45;
-  _phase=0;
-  _phase0=0;
-  _O=0;
-  _stop=false;
+  //-- If the oscillator is detached, attach it.
+  if(!_servo.attached()){
 
-  //-- Reverse mode
-  _rev = rev;
+    //-- Attach the servo and move it to the home position
+      _servo.attach(pin);
+      _servo.write(90);
+
+      //-- Initialization of oscilaltor parameters
+      _TS=30;
+      _T=2000;
+      _N = _T/_TS;
+      _inc = 2*M_PI/_N;
+
+      _previousMillis=0;
+
+      //-- Default parameters
+      _A=45;
+      _phase=0;
+      _phase0=0;
+      _O=0;
+      _stop=false;
+
+      //-- Reverse mode
+      _rev = rev;
+  }
+      
+}
+
+//-- Detach an oscillator from his servo
+void Oscillator::detach()
+{
+   //-- If the oscillator is attached, detach it.
+  if(_servo.attached())
+        _servo.detach();
+
 }
 
 /*************************************/
@@ -74,10 +88,20 @@ void Oscillator::SetT(unsigned int T)
   _inc = 2*M_PI/_N;
 };
 
+/*******************************/
+/* Manual set of the position  */
+/******************************/
+
+void Oscillator::SetPosition(int position)
+{
+  _servo.write(position+_trim);
+};
+
+
 /*******************************************************************/
 /* This function should be periodically called                     */
 /* in order to maintain the oscillations. It calculates            */
-/* if another sample should be taken and position the servo is so  */
+/* if another sample should be taken and position the servo if so  */
 /*******************************************************************/
 void Oscillator::refresh()
 {
@@ -90,14 +114,13 @@ void Oscillator::refresh()
         //-- Sample the sine function and set the servo pos
         _pos = round(_A * sin(_phase + _phase0) + _O);
 	if (_rev) _pos=-_pos;
-        _servo.write(_pos+90);
+        _servo.write(_pos+90+_trim);
+      }
 
-        //-- Increment the phase
-        _phase = _phase + _inc;
-      }  
-   
+      //-- Increment the phase
+      //-- It is always increased, even when the oscillator is stop
+      //-- so that the coordination is always kept
+      _phase = _phase + _inc;
 
   }
 }
-
-

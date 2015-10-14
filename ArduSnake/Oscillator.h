@@ -18,13 +18,17 @@
 class Oscillator
 {
   public:
-    Oscillator() {};
+    Oscillator(int trim=0) {_trim=trim;};
     void attach(int pin, bool rev =false);
+    void detach();
     
     void SetA(unsigned int A) {_A=A;};
     void SetO(unsigned int O) {_O=O;};
     void SetPh(double Ph) {_phase0=Ph;};
-    void SetT(unsigned int T); 
+    void SetT(unsigned int T);
+    void SetTrim(int trim){_trim=trim;};
+    int getTrim() {return _trim;};
+    void SetPosition(int position); 
     void Stop() {_stop=true;};
     void Play() {_stop=false;};
     void Reset() {_phase=0;};
@@ -45,6 +49,7 @@ class Oscillator
     
     //-- Internal variables
     int _pos;         //-- Current servo pos
+    int _trim;        //-- Calibration offset
     double _phase;    //-- Current phase
     double _inc;      //-- Increment of phase
     double _N;        //-- Number of samples
@@ -61,5 +66,3 @@ class Oscillator
 };
 
 #endif
-
-
