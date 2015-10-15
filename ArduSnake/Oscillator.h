@@ -20,6 +20,7 @@ class Oscillator
   public:
     Oscillator(int trim=0) {_trim=trim;};
     void attach(int pin, bool rev =false);
+    void detach();
     
     void SetA(unsigned int A) {_A=A;};
     void SetO(unsigned int O) {_O=O;};
@@ -65,5 +66,3 @@ class Oscillator
 };
 
 #endif
-
-
