@@ -36,7 +36,7 @@ bool Oscillator::next_sample()
 //-- Attach an oscillator to a servo
 //-- Input: pin is the arduino pin were the servo
 //-- is connected
-void Oscillator::attach(int pin, bool rev
+void Oscillator::attach(int pin, bool rev)
 {
   //-- If the oscillator is detached, attach it.
   if(!_servo.attached()){
